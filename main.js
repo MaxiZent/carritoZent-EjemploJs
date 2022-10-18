@@ -27,7 +27,6 @@ console.log(productsArray)
 // Productos de pantalla
 
 
-
 productsArray.forEach(product => {
     productContainer.innerHTML += `
     <div class="shop-item" id="${product.id}">
@@ -62,10 +61,10 @@ addBtns.forEach(btn => {
 
         //Con el id encontrar el objeto actual
         let actualPrducto = productsArray.find (item => item.id === actualId)
+        actualPrducto.quantity = 1;
         console.log(actualPrducto)
 
         // Agregar el producto al arreflo del carro
-
 
         cartContainer.innerHTML += `
         <div class="cart-row">
@@ -75,12 +74,21 @@ addBtns.forEach(btn => {
                 </div>
                 <span class="cart-price cart-column">$${actualPrducto.YEAR}</span>
                 <div class="cart-quantity cart-column">
-                    <input class="cart-quantity-input" min="1" type="number" value="1">
+                    <input class="cart-quantity-input" min="1" type="number" value="${actualPrducto}">
                     <button class="btn btn-danger" type="button">REMOVE</button>
                 </div>
         </div`
+
+        //Actualizar el valor total
     });
 });
 
+function getTotal(){
+    let cartContainer
+    return cartContainer.reduce((sum, item)=>{
+        sumTotal = sum  + item.quantity*item.YEAR
+    } , 0)
+}
 
-
+let totalElement = document.querySelector('.cart-total-title');
+totalElement.innerText = `$${total}`
