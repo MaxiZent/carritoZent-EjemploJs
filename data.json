@@ -1,7 +1,0 @@
-[
-    {"nombre": "Cuadros", "precio": 2000, "id":1},
-    {"nombre": "Cuadros Musicales", "precio": 2000, "id":2},
-    {"nombre": "Posters", "precio": 1500, "id":3},
-    {"nombre": "Posters One Piece", "precio": 1000, "id":4},
-    {"nombre": "Impresion de fotografia", "precio": 1500, "id":5}
-]

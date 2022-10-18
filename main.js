@@ -5,7 +5,7 @@
 //Variables Iniciales
 let shoppingCartArray = [];     // agregado a carrito
 let total = 0;
-let productContainer = document.querySelector('shop-items');
+let productContainer = document.getElementById('shop-items');
 
 const options = {
 	method: 'GET',
@@ -19,7 +19,6 @@ const options = {
 
 let res = await fetch('https://books39.p.rapidapi.com/CZFA4F/books', options)
 let data = await res.json()
-console.log('Hola')
 
 //Limitamos a 4 producto
 let productsArray = data.slice(0, 5) //productos que estan en stock
@@ -32,10 +31,11 @@ console.log(productsArray)
 productsArray.forEach(product => {
     productContainer.innerHTML += `
     <div class="shop-item" id="${product.id}">
-        <span class="shop-item-title">${product.title}</span>
-        <img class="shop-item-image" src="${product.images[0]}">
+        <span class="shop-item-title">${product.TITLE}</span>
+        <img class="shop-item-image" src="./Images/libro.jpg">
+        <p class="shop-item-author">${product.AUTHOR}</p>
         <div class="shop-item-details">
-            <span class="shop-item-price">$${product.price}</span>
+            <span class="shop-item-price">$${product.YEAR}</span>
             <button class="btn btn-primary shop-item-button" type="button">ADD TO CART</button>
         </div>
     </div>`
@@ -50,24 +50,30 @@ let cartContainer = document.querySelector('.cart-items');
 addBtns.forEach(btn => {
     btn.addEventListener('click', event=>{
         console.log('click')
+
+
         // Agrego productos al carro
+
 
         //Buscar Id del producto
         let actualId = parseInt(event.target.parentNode.parentNode.id);
         console.log(actualId);
 
+
         //Con el id encontrar el objeto actual
-        let actualPrducto = productsArray.find ()
+        let actualPrducto = productsArray.find (item => item.id === actualId)
+        console.log(actualPrducto)
+
         // Agregar el producto al arreflo del carro
 
 
         cartContainer.innerHTML += `
         <div class="cart-row">
                 <div class="cart-item cart-column">
-                    <img class="cart-item-image" src="./Images/shirt.jpg" width="100" height="100">
-                    <span class="cart-item-title">Shirt</span>
+                    <img class="cart-item-image" src="./Images/libro.jpg" width="100" height="100">
+                    <span class="cart-item-title">${actualPrducto.TITLE}</span>
                 </div>
-                <span class="cart-price cart-column">$19.99</span>
+                <span class="cart-price cart-column">$${actualPrducto.YEAR}</span>
                 <div class="cart-quantity cart-column">
                     <input class="cart-quantity-input" min="1" type="number" value="1">
                     <button class="btn btn-danger" type="button">REMOVE</button>
