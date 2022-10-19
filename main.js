@@ -67,7 +67,6 @@ addBtns.forEach(btn => {
         if (actualPrducto.quantity === undefined) {
             actualPrducto.quantity = 1;
         }
-        console.log(actualPrducto.id)
 
         // Preguntar si el producto que agrego ya existe
         let existe = false
@@ -92,6 +91,8 @@ addBtns.forEach(btn => {
         //Actualizar el valor total
 
         getTotal()
+        updateNumberOfItems()
+
     });
 });
 
@@ -120,5 +121,19 @@ function drawItems() {
                 <button class="btn btn-danger" type="button">REMOVER</button>
             </div>
     </div`
+    });
+}
+
+function updateNumberOfItems() {
+    let inputNumber = document.querySelectorAll('cart-quantity-input');
+    inputNumber = [...inputNumber];
+    inputNumber.forEach(item => {
+        item.addEventListener('click', event => {
+            //conseguir titulo del libro
+
+            //Busco el objeto conn ese titulo
+
+            //Actualizar el numero de la quuantity 
+        });
     });
 }
