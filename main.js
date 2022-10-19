@@ -6,13 +6,15 @@
 let shoppingCartArray = [];     // agregado a carrito
 let total = 0;
 let productContainer = document.getElementById('shop-items');
+let totalElement = document.querySelector('.cart-total-title');
+
 
 const options = {
-	method: 'GET',
-	headers: {
-		'X-RapidAPI-Key': '887ff174e1mshdcf730a516a9409p1f2489jsn2fc87d8982e0',
-		'X-RapidAPI-Host': 'books39.p.rapidapi.com'
-	}
+    method: 'GET',
+    headers: {
+        'X-RapidAPI-Key': '887ff174e1mshdcf730a516a9409p1f2489jsn2fc87d8982e0',
+        'X-RapidAPI-Host': 'books39.p.rapidapi.com'
+    }
 };
 
 //Peticion de productos al servidor:
@@ -47,7 +49,7 @@ addBtns = [...addBtns];
 let cartContainer = document.querySelector('.cart-items');
 
 addBtns.forEach(btn => {
-    btn.addEventListener('click', event=>{
+    btn.addEventListener('click', event => {
         console.log('click')
 
 
@@ -60,35 +62,63 @@ addBtns.forEach(btn => {
 
 
         //Con el id encontrar el objeto actual
-        let actualPrducto = productsArray.find (item => item.id === actualId)
-        actualPrducto.quantity = 1;
-        console.log(actualPrducto)
+        let actualPrducto = productsArray.find(item => item.id === actualId)
 
-        // Agregar el producto al arreflo del carro
+        if (actualPrducto.quantity === undefined) {
+            actualPrducto.quantity = 1;
+        }
+        console.log(actualPrducto.id)
 
-        cartContainer.innerHTML += `
-        <div class="cart-row">
-                <div class="cart-item cart-column">
-                    <img class="cart-item-image" src="./Images/libro.jpg" width="100" height="100">
-                    <span class="cart-item-title">${actualPrducto.TITLE}</span>
-                </div>
-                <span class="cart-price cart-column">$${actualPrducto.YEAR}</span>
-                <div class="cart-quantity cart-column">
-                    <input class="cart-quantity-input" min="1" type="number" value="${actualPrducto}">
-                    <button class="btn btn-danger" type="button">REMOVE</button>
-                </div>
-        </div`
+        // Preguntar si el producto que agrego ya existe
+        let existe = false
+        shoppingCartArray.forEach(libro => {
+            if (actualId == libro.id) {
+                existe = true
+            }
+        })
+
+        if (existe) {
+            console.log('aumentado')
+            actualPrducto.quantity++
+        } else {
+            shoppingCartArray.push(actualPrducto)
+        }
+        console.log(shoppingCartArray)
+
+        // Dibujar en el dom el arreglo de compras actualizado
+
+        drawItems()
 
         //Actualizar el valor total
+
+        getTotal()
     });
 });
 
-function getTotal(){
-    let cartContainer
-    return cartContainer.reduce((sum, item)=>{
-        sumTotal = sum  + item.quantity*item.YEAR
-    } , 0)
+function getTotal() {
+    let sumTotal
+    let total = shoppingCartArray.reduce((sum, item) => {
+        sumTotal = sum + item.quantity * item.YEAR
+        return sumTotal
+    }, 0)
+    totalElement.innerText = `$${total}`
 }
 
-let totalElement = document.querySelector('.cart-total-title');
-totalElement.innerText = `$${total}`
+function drawItems() {
+    cartContainer.innerHTML = '';
+    shoppingCartArray.forEach(item => {
+
+        cartContainer.innerHTML += `
+    <div class="cart-row">
+            <div class="cart-item cart-column">
+                <img class="cart-item-image" src="./Images/libro.jpg" width="100" height="100">
+                <span class="cart-item-title">${item.TITLE}</span>
+            </div>
+            <span class="cart-price cart-column">$${item.YEAR}</span>
+            <div class="cart-quantity cart-column">
+                <input class="cart-quantity-input" min="1" type="number" value="${item.quantity}">
+                <button class="btn btn-danger" type="button">REMOVER</button>
+            </div>
+    </div`
+    });
+}
