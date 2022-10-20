@@ -8,7 +8,6 @@ let total = 0;
 let productContainer = document.getElementById('shop-items');
 let totalElement = document.querySelector('.cart-total-title');
 
-
 const options = {
     method: 'GET',
     headers: {
@@ -18,7 +17,6 @@ const options = {
 };
 
 //Peticion de productos al servidor:
-
 let res = await fetch('https://books39.p.rapidapi.com/CZFA4F/books', options)
 let data = await res.json()
 
@@ -27,8 +25,6 @@ let productsArray = data.slice(0, 5) //productos que estan en stock
 console.log(productsArray)
 
 // Productos de pantalla
-
-
 productsArray.forEach(product => {
     productContainer.innerHTML += `
     <div class="shop-item" id="${product.id}">
@@ -52,9 +48,7 @@ addBtns.forEach(btn => {
     btn.addEventListener('click', event => {
         console.log('click')
 
-
         // Agrego productos al carro
-
 
         //Buscar Id del producto
         let actualId = parseInt(event.target.parentNode.parentNode.id);
@@ -92,6 +86,7 @@ addBtns.forEach(btn => {
 
         getTotal()
         updateNumberOfItems()
+        removeItems()
 
     });
 });
@@ -101,7 +96,7 @@ function getTotal() {
     let total = shoppingCartArray.reduce((sum, item) => {
         sumTotal = sum + item.quantity * item.YEAR
         return sumTotal
-    }, 0)
+    }, 0);
     totalElement.innerText = `$${total}`
 }
 
@@ -110,7 +105,7 @@ function drawItems() {
     shoppingCartArray.forEach(item => {
 
         cartContainer.innerHTML += `
-    <div class="cart-row">
+        <div class="cart-row">
             <div class="cart-item cart-column">
                 <img class="cart-item-image" src="./Images/libro.jpg" width="100" height="100">
                 <span class="cart-item-title">${item.TITLE}</span>
@@ -120,20 +115,54 @@ function drawItems() {
                 <input class="cart-quantity-input" min="1" type="number" value="${item.quantity}">
                 <button class="btn btn-danger" type="button">REMOVER</button>
             </div>
-    </div`
+        </div`
     });
+    removeItems()
 }
 
 function updateNumberOfItems() {
-    let inputNumber = document.querySelectorAll('cart-quantity-input');
-    inputNumber = [...inputNumber];
+    let inputNumber = document.querySelectorAll('.cart-quantity-input');
+    inputNumber = [...inputNumber];//ya no es node, es arreglo
+
     inputNumber.forEach(item => {
         item.addEventListener('click', event => {
+
             //conseguir titulo del libro
+            let actualBookTitle = event.target.parentElement.parentElement.childNodes[1].innerText;
+            let actualBookQuantity = parseInt(event.target.value);
 
             //Busco el objeto conn ese titulo
+            let actualBookObject = shoppingCartArray.find(item => item.TITLE == actualBookTitle)
+            console.log(actualBookObject)
 
             //Actualizar el numero de la quuantity 
+            actualBookObject.quantity = actualBookQuantity;
+
+            //Actualizar el precio total
+            getTotal()
+        });
+    });
+}
+
+function removeItems() {
+    let removeBtns = document.querySelectorAll('.btn-danger');
+    removeBtns = [...removeBtns];
+    removeBtns.forEach(btn => {
+        btn.addEventListener('click', event => {
+            //Conseguir el titulo del libro
+            let actualBookTitle = event.target.parentElement.parentElement.childNodes[1].innerText;
+
+            //Busco el objeto con ese titulo
+            let actualBookObject = shoppingCartArray.find(item => item.TITLE == actualBookTitle)
+
+            //Remover el arreglo de productos de cart
+            shoppingCartArray = shoppingCartArray.filter(item => item != actualBookObject)
+            console.log(shoppingCartArray)
+
+            //Actualizar el precio total
+            drawItems()
+            getTotal()
+            updateNumberOfItems()
         });
     });
 }
