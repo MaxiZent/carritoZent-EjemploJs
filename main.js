@@ -1,7 +1,3 @@
-// fetch ('https://api.escuelajs.co/api/v1/products/1')
-// .then(res => res.json())
-// .then(data => console.log(data));
-
 //Variables Iniciales
 let shoppingCartArray = [];     // agregado a carrito
 let total = 0;
